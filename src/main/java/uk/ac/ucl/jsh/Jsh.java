@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -285,8 +286,27 @@ public class Jsh {
                     }
                 }
                 break;
-            default:
-                throw new RuntimeException(appName + ": unknown application");
+            case "sort":
+                if (appArgs.isEmpty()) {
+                    throw new RuntimeException("sort: missing arguments");
+                }
+                if (appArgs.size() != 1) {
+                    throw new RuntimeException("sort: wrong arguments");
+                }
+                String sortFile = currentDirectory + File.separator + appArgs[0];
+                try(Stream<String> lines = Files.lines(Paths.get(sortFile))){
+                    lines.sorted().forEach(s -> {
+                        try {
+                            writer.write(s);
+                            writer.write(System.getProperty("line.separator"));
+                            writer.flush();
+                        } catch (Exception e) {
+                            //TODO throw something
+                            throw new RuntimeException("Error occured");
+                        }
+                        
+                    });
+                }
             }
         }
     }
