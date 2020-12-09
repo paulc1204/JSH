@@ -1,7 +1,10 @@
 package uk.ac.ucl.jsh;
 
+import uk.ac.ucl.jsh.applications.Find;
+
 import java.io.BufferedReader;
 import java.io.File;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -12,11 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.*;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -293,25 +297,46 @@ public class Jsh {
                 if (appArgs.size() != 1) {
                     throw new RuntimeException("sort: wrong arguments");
                 }
-                String sortFile = currentDirectory + File.separator + appArgs[0];
+                String sortFile = currentDirectory + File.separator + appArgs.get(0);
                 try(Stream<String> lines = Files.lines(Paths.get(sortFile))){
                     lines.sorted().forEach(s -> {
                         try {
                             writer.write(s);
                             writer.write(System.getProperty("line.separator"));
                             writer.flush();
-                        } catch (Exception e) {
-                            //TODO throw something
-                            throw new RuntimeException("Error occured");
-                        }
-                        
+                        } catch (IOException e) {
+                            // throw something here
+                        }      
                     });
                 }
+                break;
+            case "find":
+                if (appArgs.isEmpty()) {
+                    throw new RuntimeException("find: missing arguments");
+                }
+                if (appArgs.size() > 3 || appArgs.size() < 2) {
+                    throw new RuntimeException("find: wrong arguments");
+                }  
+                if (!appArgs.contains("-name")){
+                    throw new RuntimeException("find: wrong arguments");
+                }
+        
+                Path rootPath = Paths.get(currentDirectory);
+                String pattern = appArgs.get(1);
+                if (appArgs.size() == 3) { 
+                    rootPath = Paths.get(rootPath.toString() + File.separator + appArgs.get(0)); 
+                    pattern = appArgs.get(2);
+                }
+
+                Find find = new Find(rootPath, pattern);
+                find.exec();
+                
             }
         }
     }
 
     public static void main(String[] args) {
+
         if (args.length > 0) {
             if (args.length != 2) {
                 System.out.println("jsh: wrong number of arguments");
