@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
@@ -33,6 +34,7 @@ public class Jsh {
 
     public static void eval(String cmdline, OutputStream output) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(output);
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
         CharStream parserInput = CharStreams.fromString(cmdline); 
         JshGrammarLexer lexer = new JshGrammarLexer(parserInput);
@@ -324,12 +326,12 @@ public class Jsh {
                 Path rootPath = Paths.get(currentDirectory);
                 String pattern = appArgs.get(1);
                 if (appArgs.size() == 3) { 
-                    rootPath = Paths.get(rootPath.toString() + File.separator + appArgs.get(0)); 
+                    rootPath = Paths.get(currentDirectory + File.separator + appArgs.get(0)); 
                     pattern = appArgs.get(2);
                 }
-
+                String[] args = {};
                 Find find = new Find(rootPath, pattern);
-                find.exec();
+                find.exec(appArgs.toArray(args), input, writer);
                 
             }
         }

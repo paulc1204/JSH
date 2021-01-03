@@ -7,10 +7,10 @@ import static java.nio.file.FileVisitResult.*;
 import static java.nio.file.FileVisitOption.*;
 import java.util.*;
 
-public class Find extends SimpleFileVisitor<Path> implements Application {
+public class Find extends SimpleFileVisitor<Path> implements Application<OutputStreamWriter> {
 
     private final PathMatcher matcher;
-    private OutputStreamWriter writer = new OutputStreamWriter(System.out);
+    private OutputStreamWriter writer;
     private String pattern;
     private Path rootPath;
 
@@ -48,13 +48,19 @@ public class Find extends SimpleFileVisitor<Path> implements Application {
         return CONTINUE;
     }
 
-    @Override
-    public void exec() {
-        try {
+    // @Override
+    // public void exec(String[] args, BufferedReader input, OutputStream output) {
+        
+    // }
+
+	@Override
+	public void exec(String[] args, BufferedReader input, OutputStreamWriter writer) {
+        this.writer = writer;
+		try {
             Files.walkFileTree(this.rootPath, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+	}
 }
 
