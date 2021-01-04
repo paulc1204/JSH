@@ -13,10 +13,10 @@ import java.util.stream.Stream;
 
 import uk.ac.ucl.jsh.Jsh;
 
-public class Sort implements Application<OutputStreamWriter> {
+public class Sort implements Application {
 
     private String fileName;
-    
+
     @Override
     public void exec(ArrayList<String> args, BufferedReader input, OutputStreamWriter writer) throws IOException {
         if (args.isEmpty()) {
