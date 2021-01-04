@@ -1,6 +1,6 @@
 package uk.ac.ucl.jsh;
 
-import uk.ac.ucl.jsh.applications.Find;
+import uk.ac.ucl.jsh.applications.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -293,24 +293,8 @@ public class Jsh {
                 }
                 break;
             case "sort":
-                if (appArgs.isEmpty()) {
-                    throw new RuntimeException("sort: missing arguments");
-                }
-                if (appArgs.size() != 1) {
-                    throw new RuntimeException("sort: wrong arguments");
-                }
-                String sortFile = currentDirectory + File.separator + appArgs.get(0);
-                try(Stream<String> lines = Files.lines(Paths.get(sortFile))){
-                    lines.sorted().forEach(s -> {
-                        try {
-                            writer.write(s);
-                            writer.write(System.getProperty("line.separator"));
-                            writer.flush();
-                        } catch (IOException e) {
-                            // throw something here
-                        }      
-                    });
-                }
+                Sort sort = new Sort();
+                sort.exec(appArgs, input, writer);
                 break;
             case "find":
                 Find find = new Find();
