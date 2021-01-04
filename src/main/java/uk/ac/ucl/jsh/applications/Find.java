@@ -7,17 +7,16 @@ import static java.nio.file.FileVisitResult.*;
 import static java.nio.file.FileVisitOption.*;
 import java.util.*;
 
+import uk.ac.ucl.jsh.Jsh;
+
 public class Find extends SimpleFileVisitor<Path> implements Application<OutputStreamWriter> {
 
-    private final PathMatcher matcher;
+    private PathMatcher matcher;
     private OutputStreamWriter writer;
     private String pattern;
     private Path rootPath;
 
-    public Find(Path rootPath, String pattern) {
-        this.rootPath = rootPath;
-        this.pattern = pattern;
-        matcher = FileSystems.getDefault().getPathMatcher("glob:" + this.pattern);
+    public Find() {
         
     }
 
@@ -48,14 +47,28 @@ public class Find extends SimpleFileVisitor<Path> implements Application<OutputS
         return CONTINUE;
     }
 
-    // @Override
-    // public void exec(String[] args, BufferedReader input, OutputStream output) {
-        
-    // }
-
 	@Override
-	public void exec(String[] args, BufferedReader input, OutputStreamWriter writer) {
+	public void exec(ArrayList<String> args, BufferedReader input, OutputStreamWriter writer) {
+        if (args.isEmpty()) {
+            throw new RuntimeException("find: missing arguments");
+        }
+        if (args.size() > 3 || args.size() < 2) {
+            throw new RuntimeException("find: wrong arguments");
+        }  
+        if (!args.contains("-name")){
+            throw new RuntimeException("find: wrong arguments");
+        }
+
         this.writer = writer;
+        rootPath = Paths.get(Jsh.currentDirectory);
+        pattern = args.get(1);
+        if (args.size() == 3) { 
+            rootPath = Paths.get(Jsh.currentDirectory + File.separator + args.get(0)); 
+            pattern = args.get(2);
+        }
+
+        matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+        
 		try {
             Files.walkFileTree(this.rootPath, this);
         } catch (IOException e) {

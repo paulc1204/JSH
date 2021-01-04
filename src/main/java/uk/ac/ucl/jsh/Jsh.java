@@ -30,7 +30,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 public class Jsh {
 
-    private static String currentDirectory = System.getProperty("user.dir");
+    public static String currentDirectory = System.getProperty("user.dir");
 
     public static void eval(String cmdline, OutputStream output) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(output);
@@ -50,7 +50,7 @@ public class Jsh {
                 rawCommands.add(lastSubcommand);
                 lastSubcommand = "";
             }
-        }
+        }   
         rawCommands.add(lastSubcommand);
         for (String rawCommand : rawCommands) {
             String spaceRegex = "[^\\s\"']+|\"([^\"]*)\"|'([^']*)'";
@@ -313,25 +313,8 @@ public class Jsh {
                 }
                 break;
             case "find":
-                if (appArgs.isEmpty()) {
-                    throw new RuntimeException("find: missing arguments");
-                }
-                if (appArgs.size() > 3 || appArgs.size() < 2) {
-                    throw new RuntimeException("find: wrong arguments");
-                }  
-                if (!appArgs.contains("-name")){
-                    throw new RuntimeException("find: wrong arguments");
-                }
-        
-                Path rootPath = Paths.get(currentDirectory);
-                String pattern = appArgs.get(1);
-                if (appArgs.size() == 3) { 
-                    rootPath = Paths.get(currentDirectory + File.separator + appArgs.get(0)); 
-                    pattern = appArgs.get(2);
-                }
-                String[] args = {};
-                Find find = new Find(rootPath, pattern);
-                find.exec(appArgs.toArray(args), input, writer);
+                Find find = new Find();
+                find.exec(appArgs, input, writer);
                 
             }
         }
