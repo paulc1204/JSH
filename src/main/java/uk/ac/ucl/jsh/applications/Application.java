@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public interface Application<T> {
+public interface Application {
     
-    public void exec(ArrayList<String> args, BufferedReader input, T output) throws IOException;
+    public void exec(ArrayList<String> args, BufferedReader input, OutputStreamWriter writer) throws IOException;
 
 }

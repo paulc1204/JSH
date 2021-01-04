@@ -9,7 +9,7 @@ import java.util.*;
 
 import uk.ac.ucl.jsh.Jsh;
 
-public class Find extends SimpleFileVisitor<Path> implements Application<OutputStreamWriter> {
+public class Find extends SimpleFileVisitor<Path> implements Application {
 
     private PathMatcher matcher;
     private OutputStreamWriter writer;
