@@ -9,6 +9,6 @@ import java.util.ArrayList;
 
 public interface Application {
     
-    public void exec(ArrayList<String> args, BufferedReader input, OutputStreamWriter writer) throws IOException;
+    public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) throws IOException;
 
 }

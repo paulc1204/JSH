@@ -16,10 +16,6 @@ public class Find extends SimpleFileVisitor<Path> implements Application {
     private String pattern;
     private Path rootPath;
 
-    public Find() {
-        
-    }
-
     private void find(Path file) throws IOException {
         Path name = file.getFileName();
         if (name != null && matcher.matches(name)) {
@@ -48,23 +44,23 @@ public class Find extends SimpleFileVisitor<Path> implements Application {
     }
 
 	@Override
-	public void exec(ArrayList<String> args, BufferedReader input, OutputStreamWriter writer) {
-        if (args.isEmpty()) {
+	public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) {
+        if (appArgs.isEmpty()) {
             throw new RuntimeException("find: missing arguments");
         }
-        if (args.size() > 3 || args.size() < 2) {
+        if (appArgs.size() > 3 || appArgs.size() < 2) {
             throw new RuntimeException("find: wrong arguments");
         }  
-        if (!args.contains("-name")){
+        if (!appArgs.contains("-name")){
             throw new RuntimeException("find: wrong arguments");
         }
 
         this.writer = writer;
         rootPath = Paths.get(Jsh.currentDirectory);
-        pattern = args.get(1);
-        if (args.size() == 3) { 
-            rootPath = Paths.get(Jsh.currentDirectory + File.separator + args.get(0)); 
-            pattern = args.get(2);
+        pattern = appArgs.get(1);
+        if (appArgs.size() == 3) { 
+            rootPath = Paths.get(Jsh.currentDirectory + File.separator + appArgs.get(0)); 
+            pattern = appArgs.get(2);
         }
 
         matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);

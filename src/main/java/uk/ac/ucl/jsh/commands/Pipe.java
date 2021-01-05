@@ -8,7 +8,6 @@ public class Pipe implements Command {
 
     @Override
     public void eval(String cmdline, OutputStreamWriter writer) {
-        // TODO Auto-generated method stub
 
     }
     

@@ -80,50 +80,16 @@ public class Jsh {
             ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
             switch (appName) {
             case "cd":
-                if (appArgs.isEmpty()) {
-                    throw new RuntimeException("cd: missing argument");
-                } else if (appArgs.size() > 1) {
-                    throw new RuntimeException("cd: too many arguments");
-                }
-                String dirString = appArgs.get(0);
-                File dir = new File(currentDirectory, dirString);
-                if (!dir.exists() || !dir.isDirectory()) {
-                    throw new RuntimeException("cd: " + dirString + " is not an existing directory");
-                }
-                currentDirectory = dir.getCanonicalPath();
+                Cd cd = new Cd();
+                cd.exec(appArgs, input, writer);
                 break;
             case "pwd":
-                writer.write(currentDirectory);
-                writer.write(System.getProperty("line.separator"));
-                writer.flush();
+                Pwd pwd = new Pwd();
+                pwd.exec(appArgs, input, writer);
                 break;
             case "ls":
-                File currDir;
-                if (appArgs.isEmpty()) {
-                    currDir = new File(currentDirectory);
-                } else if (appArgs.size() == 1) {
-                    currDir = new File(appArgs.get(0));
-                } else {
-                    throw new RuntimeException("ls: too many arguments");
-                }
-                try {
-                    File[] listOfFiles = currDir.listFiles();
-                    boolean atLeastOnePrinted = false;
-                    for (File file : listOfFiles) {
-                        if (!file.getName().startsWith(".")) {
-                            writer.write(file.getName());
-                            writer.write("\t");
-                            writer.flush();
-                            atLeastOnePrinted = true;
-                        }
-                    }
-                    if (atLeastOnePrinted) {
-                        writer.write(System.getProperty("line.separator"));
-                        writer.flush();
-                    }
-                } catch (NullPointerException e) {
-                    throw new RuntimeException("ls: no such directory");
-                }
+                Ls ls = new Ls();
+                ls.exec(appArgs, input, writer);
                 break;
             case "cat":
                 if (appArgs.isEmpty()) {
