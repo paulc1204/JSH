@@ -71,9 +71,8 @@ public class Eval {
                 }
             }
 
-            CommandVisitor visitor = new CommandVisitor(tokens, input, writer);
-            Command command = new Call();  
-            command.accept(visitor);
+            Command command = new Call(tokens, input, writer); //which child class of Command to instantiate should be decided by parser
+            command.accept(new CommandVisitor());
         }
 
 
