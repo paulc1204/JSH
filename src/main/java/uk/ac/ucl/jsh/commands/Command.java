@@ -4,7 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import uk.ac.ucl.jsh.visitors.Visitor;
+
 public interface Command{
 
-    public void eval(String cmdline, OutputStreamWriter writer);
+    public void accept(Visitor visitor);
+
 }

@@ -5,15 +5,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import uk.ac.ucl.jsh.applications.*;
+import uk.ac.ucl.jsh.visitors.Visitor;
 
 public class Call implements Command {
-
-    private String app;
-    @Override
-    public void eval(String cmdline, OutputStreamWriter writer) {
+	
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+		
+	}   
         
-        
 
-    }
+
     
 }

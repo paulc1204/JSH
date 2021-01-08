@@ -9,10 +9,13 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import uk.ac.ucl.jsh.visitors.Visitor;
+
 public class Sequence implements Command {
 
     @Override
-    public void eval(String cmdline, OutputStreamWriter writer) {
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
 
     }
     
