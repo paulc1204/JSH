@@ -14,7 +14,7 @@ public class Uniq implements Application {
     private String fileName;
 
     @Override
-    public void exec(ArrayList<String> args, BufferedReader input, OutputStreamWriter writer) throws IOException {
+    public void exec(ArrayList<String> args, InputStream input, OutputStream output) throws IOException {
         // if (args.isEmpty()) {
         //     throw new RuntimeException("uniq: missing arguments");
         // }

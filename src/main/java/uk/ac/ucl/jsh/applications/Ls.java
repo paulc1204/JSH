@@ -1,8 +1,9 @@
 package uk.ac.ucl.jsh.applications;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -11,10 +12,12 @@ import uk.ac.ucl.jsh.Jsh;
 public class Ls implements Application {
 
     @Override
-    public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) throws IOException {
+    public void exec(ArrayList<String> appArgs, InputStream input, OutputStream output) throws IOException {
         File currDir;
+        OutputStreamWriter writer = new OutputStreamWriter(output);
+        
         if (appArgs.isEmpty()) {
-            currDir = new File(Jsh.currentDirectory);
+            currDir = new File(Jsh.getCurrentDir());
         } else if (appArgs.size() == 1) {
             currDir = new File(appArgs.get(0));
         } else {

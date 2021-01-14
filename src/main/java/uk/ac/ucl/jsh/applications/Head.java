@@ -3,6 +3,8 @@ package uk.ac.ucl.jsh.applications;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +18,7 @@ import uk.ac.ucl.jsh.Jsh;
 public class Head implements Application {
 
     @Override
-    public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) throws IOException {
+    public void exec(ArrayList<String> appArgs, InputStream input, OutputStream output) throws IOException {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("head: missing arguments");
         }
@@ -26,8 +28,11 @@ public class Head implements Application {
         if (appArgs.size() == 3 && !appArgs.get(0).equals("-n")) {
             throw new RuntimeException("head: wrong argument " + appArgs.get(0));
         }
+
         int headLines = 10;
         String headArg;
+        OutputStreamWriter writer = new OutputStreamWriter(output);
+
         if (appArgs.size() == 3) {
             try {
                 headLines = Integer.parseInt(appArgs.get(1));
@@ -38,10 +43,11 @@ public class Head implements Application {
         } else {
             headArg = appArgs.get(0);
         }
-        File headFile = new File(Jsh.currentDirectory + File.separator + headArg);
+        
+        File headFile = new File(Jsh.getCurrentDir() + File.separator + headArg);
         if (headFile.exists()) {
             Charset encoding = StandardCharsets.UTF_8;
-            Path filePath = Paths.get((String) Jsh.currentDirectory + File.separator + headArg);
+            Path filePath = Paths.get((String) Jsh.getCurrentDir() + File.separator + headArg);
             try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
                 for (int i = 0; i < headLines; i++) {
                     String line = null;

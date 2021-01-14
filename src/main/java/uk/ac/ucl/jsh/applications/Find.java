@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
 import static java.nio.file.FileVisitResult.*;
-import static java.nio.file.FileVisitOption.*;
 import java.util.*;
 
 import uk.ac.ucl.jsh.Jsh;
@@ -44,7 +43,7 @@ public class Find extends SimpleFileVisitor<Path> implements Application {
     }
 
 	@Override
-	public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) {
+	public void exec(ArrayList<String> appArgs, InputStream input, OutputStream output) {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("find: missing arguments");
         }
@@ -55,11 +54,11 @@ public class Find extends SimpleFileVisitor<Path> implements Application {
             throw new RuntimeException("find: wrong arguments");
         }
 
-        this.writer = writer;
-        rootPath = Paths.get(Jsh.currentDirectory);
+        writer = new OutputStreamWriter(output);
+        rootPath = Paths.get(Jsh.getCurrentDir());
         pattern = appArgs.get(1);
         if (appArgs.size() == 3) { 
-            rootPath = Paths.get(Jsh.currentDirectory + File.separator + appArgs.get(0)); 
+            rootPath = Paths.get(Jsh.getCurrentDir() + File.separator + appArgs.get(0)); 
             pattern = appArgs.get(2);
         }
 

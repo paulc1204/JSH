@@ -2,6 +2,8 @@ package uk.ac.ucl.jsh.applications;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -18,15 +20,16 @@ import uk.ac.ucl.jsh.Jsh;
 public class Grep implements Application {
 
     @Override
-    public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) throws IOException {
+    public void exec(ArrayList<String> appArgs, InputStream input, OutputStream output) throws IOException {
         if (appArgs.size() < 2) {
             throw new RuntimeException("grep: wrong number of arguments");
         }
+        OutputStreamWriter writer = new OutputStreamWriter(output);
         Pattern grepPattern = Pattern.compile(appArgs.get(0));
         int numOfFiles = appArgs.size() - 1;
         Path filePath;
         Path[] filePathArray = new Path[numOfFiles];
-        Path currentDir = Paths.get(Jsh.currentDirectory);
+        Path currentDir = Paths.get(Jsh.getCurrentDir());
         for (int i = 0; i < numOfFiles; i++) {
             filePath = currentDir.resolve(appArgs.get(i + 1));
             if (Files.notExists(filePath) || Files.isDirectory(filePath) || 

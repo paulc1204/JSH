@@ -1,6 +1,5 @@
 package uk.ac.ucl.jsh.applications;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,9 +16,10 @@ import uk.ac.ucl.jsh.Jsh;
 public class Sort implements Application {
 
     @Override
-    public void exec(ArrayList<String> appArgs, BufferedReader input, OutputStreamWriter writer) throws IOException {
+    public void exec(ArrayList<String> appArgs, InputStream input, OutputStream output) throws IOException {
         boolean reverse = false;
         String fileName;
+        OutputStreamWriter writer = new OutputStreamWriter(output);
 
         if (appArgs.isEmpty()) {
             throw new RuntimeException("sort: missing arguments");
@@ -28,13 +28,13 @@ public class Sort implements Application {
         }
 
         if(appArgs.size() == 1){
-            fileName = Jsh.currentDirectory + File.separator + appArgs.get(0);
+            fileName = Jsh.getCurrentDir() + File.separator + appArgs.get(0);
         }else{
             reverse = appArgs.get(0).equals("-r");
             if(!reverse){
                 throw new RuntimeException("sort: wrong arguments");
             }
-            fileName = Jsh.currentDirectory + File.separator + appArgs.get(1);   
+            fileName = Jsh.getCurrentDir() + File.separator + appArgs.get(1);   
         }
 
         try(Stream<String> lines = Files.lines(Paths.get(fileName))){

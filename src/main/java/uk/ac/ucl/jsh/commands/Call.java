@@ -13,14 +13,14 @@ public class Call implements Command {
 	
 	public ArrayList<String> appArgs;
     public String appName;
-    public BufferedReader input;
-	public OutputStreamWriter writer;
+    public InputStream input;
+	public final OutputStream output; //i think output becomes null for some reason as it gets passed around???
 	
-	public Call(ArrayList<String> tokens, BufferedReader input, OutputStreamWriter writer){
+	public Call(ArrayList<String> tokens, InputStream input, OutputStream output){
 		appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
         appName = tokens.get(0);
-        this.input = input;
-        this.writer = writer;
+		this.input = input;
+		this.output = output;
 	}
 
 	@Override

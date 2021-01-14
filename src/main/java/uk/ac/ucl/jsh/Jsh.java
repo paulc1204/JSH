@@ -1,11 +1,22 @@
 package uk.ac.ucl.jsh;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 
 public class Jsh {
 
-    public static String currentDirectory = System.getProperty("user.dir");
+    public static final Path ROOT_DIRECTORY = Paths.get(System.getProperty("user.dir")); 
+    private static String currentDirectory = ROOT_DIRECTORY.toString();
+
+    public static void setCurrentDir(String dir){
+        currentDirectory = Paths.get(dir).toAbsolutePath().toString();
+    }
+
+    public static String getCurrentDir(){
+        return currentDirectory;
+    }
 
     public static void main(String[] args) {
 

@@ -1,6 +1,7 @@
 package uk.ac.ucl.jsh;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -24,9 +25,7 @@ import uk.ac.ucl.jsh.visitors.CommandVisitor;
 public class Eval {
 
     public static void eval(String cmdline, OutputStream output) throws IOException{
-
-        OutputStreamWriter writer = new OutputStreamWriter(output);
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        // BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
         CharStream parserInput = CharStreams.fromString(cmdline); 
         JshGrammarLexer lexer = new JshGrammarLexer(parserInput);
@@ -59,7 +58,7 @@ public class Eval {
                 } else {
                     nonQuote = regexMatcher.group().trim();
                     ArrayList<String> globbingResult = new ArrayList<String>();
-                    Path dir = Paths.get(Jsh.currentDirectory);
+                    Path dir = Paths.get(Jsh.getCurrentDir());
                     DirectoryStream<Path> stream = Files.newDirectoryStream(dir, nonQuote);
                     for (Path entry : stream) {
                         globbingResult.add(entry.getFileName().toString());
@@ -71,7 +70,7 @@ public class Eval {
                 }
             }
 
-            Command command = new Call(tokens, input, writer); //which child class of Command to instantiate should be decided by parser
+            Command command = new Call(tokens, System.in, output); //which child class of Command to instantiate should be decided by parser
             command.accept(new CommandVisitor());
         }
 

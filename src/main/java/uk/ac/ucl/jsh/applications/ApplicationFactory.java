@@ -1,6 +1,4 @@
-package uk.ac.ucl.jsh;
-
-import uk.ac.ucl.jsh.applications.*;
+package uk.ac.ucl.jsh.applications;
 
 public class ApplicationFactory {
     
