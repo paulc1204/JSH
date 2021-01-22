@@ -45,7 +45,7 @@ public class Sort implements Application {
                         writer.write(System.getProperty("line.separator"));
                         writer.flush();
                     } catch (IOException e) {
-                        // throw something here
+                        e.printStackTrace();
                     }      
                 });
             }else{
@@ -55,7 +55,7 @@ public class Sort implements Application {
                         writer.write(System.getProperty("line.separator"));
                         writer.flush();
                     } catch (IOException e) {
-                        // throw something here
+                        e.printStackTrace();
                     }      
                 });
             }

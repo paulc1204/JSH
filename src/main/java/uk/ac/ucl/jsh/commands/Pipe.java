@@ -2,7 +2,6 @@ package uk.ac.ucl.jsh.commands;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import uk.ac.ucl.jsh.visitors.Visitor;

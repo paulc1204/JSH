@@ -19,7 +19,9 @@ public class UnsafeCall implements Command {
         try {
             visitor.visit(call, input, output);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            OutputStreamWriter writer = new OutputStreamWriter(output);
+            writer.write(e.toString());
+            writer.flush();
         }
 
     }

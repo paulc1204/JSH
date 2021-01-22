@@ -26,6 +26,15 @@ public class FindTest {
     }
 
     @Test
+    public void testFind2() throws Exception {
+        Eval.eval("cd ..", null);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Eval.eval("find /findTests -name sample.txt", out);
+        Eval.eval("cd findTests", null);
+        assertEquals(Jsh.getCurrentDir() + File.separator + "sample.txt", out.toString().trim());
+    }
+
+    @Test
     public void testFindGlobbing() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Eval.eval("find -name *.txt", out);

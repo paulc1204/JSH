@@ -5,9 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.ArrayList;
 
 import uk.ac.ucl.jsh.applications.ApplicationFactory;
@@ -16,6 +13,9 @@ import uk.ac.ucl.jsh.commands.Command;
 import uk.ac.ucl.jsh.commands.Pipe;
 import uk.ac.ucl.jsh.commands.Sequence;
 
+/**
+     * Visits the {@code ParseTree} to execute the appropriate subclass of {@code Command}
+     */
 public class CommandVisitor implements Visitor {
 
     @Override

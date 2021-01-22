@@ -22,7 +22,7 @@ public class TailTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         Eval.eval("tail -n 3 sample.txt", out);
-        assertEquals("e" + ls + "f" + ls + "g", out.toString().trim());
+        assertEquals("c" + ls + "d" + ls + "e", out.toString().trim());
     }
 
     @Test

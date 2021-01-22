@@ -15,7 +15,6 @@ command : call | seq | pipe;
 
 call
     : appName = NONSPECIAL (appArgs += arg)* ('<' inputArg = arg)? ('>' outputArg = arg)?   #iORedir
-    | ('<' inputArg = arg)? appName = NONSPECIAL (appArgs += arg)* ('>' outputArg = arg)?   #iORedirFront
     | substitution = BACKQUOTED (appArgs += arg)*                                           #commandSubst
     ;
 

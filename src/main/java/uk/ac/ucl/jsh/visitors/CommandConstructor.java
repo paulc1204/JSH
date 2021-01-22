@@ -1,17 +1,25 @@
 package uk.ac.ucl.jsh.visitors;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import uk.ac.ucl.jsh.JshGrammarBaseVisitor;
 import uk.ac.ucl.jsh.JshGrammarParser;
 import uk.ac.ucl.jsh.JshGrammarParser.*;
-import uk.ac.ucl.jsh.appArguments.AppArg;
 import uk.ac.ucl.jsh.commands.Command;
 import uk.ac.ucl.jsh.commands.*;
 
+/**
+     * Visits the contexts defined by ANTLR grammar file {@code JshGrammar.g4} and tokenizes the arguments appropriately
+     */
 public class CommandConstructor extends JshGrammarBaseVisitor<Command> {
 
+    /**
+     * Splits the parsed input into the name of the application to be called and arguments for the app 
+     * 
+     * Identifies if the call being made is unsafe and decorates it accordingly
+     * 
+     * @return {@code Call} to be executed for the app being called 
+     */
 	@Override public Command visitIORedir(JshGrammarParser.IORedirContext ctx) {   
         String appName = ctx.appName.getText();
         Boolean unsafe = appName.startsWith("_");

@@ -26,6 +26,8 @@ public class ApplicationFactory {
             return new Grep();
         }else if(appName.equals("uniq")){
             return new Uniq();
+        }else if(appName.equals("cut")){
+            return new Cut();
         }
         else{
             throw new RuntimeException(appName + ": command not found");
