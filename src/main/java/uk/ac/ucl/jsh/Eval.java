@@ -19,61 +19,30 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import uk.ac.ucl.jsh.commands.*;
+import uk.ac.ucl.jsh.visitors.CommandConstructor;
 import uk.ac.ucl.jsh.visitors.CommandVisitor;
 
-//this should be implemented in ANTLR
 public class Eval {
 
-    public static void eval(String cmdline, OutputStream output) throws IOException{
-        // BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    /**
+     * Evaluates the command line input from user according to grammar defined by JSH
+     * Sorts the commands into appropriate Command types for execution
+     * Constructed commands accept visitor for appropriate execution
+     * 
+     * @param cmdline String command line input from user
+     * 
+     * @param output OutputStream for execution results to be output to 
+     */
+    public static void eval(String cmdline, OutputStream output) throws Exception {
 
         CharStream parserInput = CharStreams.fromString(cmdline); 
         JshGrammarLexer lexer = new JshGrammarLexer(parserInput);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);        
         JshGrammarParser parser = new JshGrammarParser(tokenStream);
         ParseTree tree = parser.command();
-        ArrayList<String> rawCommands = new ArrayList<String>();
-        String lastSubcommand = "";
-        for (int i=0; i<tree.getChildCount(); i++) {
-            if (!tree.getChild(i).getText().equals(";")) {
-                //No sequencing
-                lastSubcommand += tree.getChild(i).getText();
-            } else {
-                //Sequence of commands 
-                rawCommands.add(lastSubcommand);
-                lastSubcommand = "";
-            }
-        }   
-        rawCommands.add(lastSubcommand);
-        for (String rawCommand : rawCommands) {
-            String spaceRegex = "[^\\s\"']+|\"([^\"]*)\"|'([^']*)'";
-            ArrayList<String> tokens = new ArrayList<String>();
-            Pattern regex = Pattern.compile(spaceRegex);
-            Matcher regexMatcher = regex.matcher(rawCommand);
-            String nonQuote;
-            while (regexMatcher.find()) {
-                if (regexMatcher.group(1) != null || regexMatcher.group(2) != null) {
-                    String quoted = regexMatcher.group(0).trim();
-                    tokens.add(quoted.substring(1,quoted.length()-1));
-                } else {
-                    nonQuote = regexMatcher.group().trim();
-                    ArrayList<String> globbingResult = new ArrayList<String>();
-                    Path dir = Paths.get(Jsh.getCurrentDir());
-                    DirectoryStream<Path> stream = Files.newDirectoryStream(dir, nonQuote);
-                    for (Path entry : stream) {
-                        globbingResult.add(entry.getFileName().toString());
-                    }
-                    if (globbingResult.isEmpty()) {
-                        globbingResult.add(nonQuote);
-                    }
-                    tokens.addAll(globbingResult);
-                }
-            }
 
-            Command command = new Call(tokens, System.in, output); //which child class of Command to instantiate should be decided by parser
-            command.accept(new CommandVisitor());
-        }
-
+        Command root = tree.accept(new CommandConstructor());
+        root.accept(new CommandVisitor(), System.in, output);
 
     }
 }

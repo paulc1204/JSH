@@ -11,21 +11,35 @@ import uk.ac.ucl.jsh.visitors.Visitor;
 
 public class Call implements Command {
 	
-	public ArrayList<String> appArgs;
-    public String appName;
-    public InputStream input;
-	public final OutputStream output; //i think output becomes null for some reason as it gets passed around???
+	private ArrayList<String> appArgs;
+	private String appName;
+	private String inputRe;
+	private String outputRe;
 	
-	public Call(ArrayList<String> tokens, InputStream input, OutputStream output){
-		appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
-        appName = tokens.get(0);
-		this.input = input;
-		this.output = output;
+	public Call(String appName, ArrayList<String> appArgs){
+		this.appArgs = appArgs;
+        this.appName = appName;
+	}
+
+	public String getAppName(){
+		return appName;
+	}
+
+	public ArrayList<String> getAppArgs(){
+		return appArgs;
+	}
+
+	public void redirInput(String inputRe){
+		this.inputRe = inputRe;
+	}
+
+	public void redirOutput(String outputRe){
+		this.outputRe = outputRe;
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
+	public void accept(Visitor visitor, InputStream input, OutputStream output) throws Exception {
+		visitor.visit(this, input, output);
 	}   
         
 

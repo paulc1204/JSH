@@ -1,35 +1,60 @@
 package uk.ac.ucl.jsh.visitors;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.ArrayList;
 
 import uk.ac.ucl.jsh.applications.ApplicationFactory;
 import uk.ac.ucl.jsh.commands.Call;
+import uk.ac.ucl.jsh.commands.Command;
 import uk.ac.ucl.jsh.commands.Pipe;
 import uk.ac.ucl.jsh.commands.Sequence;
 
 public class CommandVisitor implements Visitor {
 
     @Override
-    public void visit(Call call) {
+    public void visit(Call call, InputStream input, OutputStream output) throws Exception{
+        ApplicationFactory.getApp(call.getAppName()).exec(call.getAppArgs(), input, output);
+      
+    }
+
+    @Override
+    public void visit(Pipe pipe, InputStream input, OutputStream output) throws Exception { 
+        ArrayList<Command> pipeCommands = pipe.getCommands();
+        if(pipeCommands.size()==0) return;
+
+        ByteArrayInputStream byteIn;
+		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+
         try {
-            ApplicationFactory.getApp(call.appName).exec(call.appArgs, call.input, call.output);
+            pipeCommands.get(0).accept(this, input, byteOut);
+            for(int i=0; i<(pipeCommands.size()-1); i++){
+                byteIn = new ByteArrayInputStream(byteOut.toByteArray()); 
+                byteOut.reset();
+                pipeCommands.get(i).accept(this, byteIn, byteOut);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally{
+            byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+            pipeCommands.get(pipeCommands.size()-1).accept(this, byteIn, output);
         }
-    }
-
-    @Override
-    public void visit(Pipe pipe) {
-       
-
-    }
-
-    @Override
-    public void visit(Sequence seq) {
         
+
+    }
+
+    @Override
+    public void visit(Sequence seq, InputStream input, OutputStream output) throws Exception{
+        for(Command command : seq){
+            command.accept(this, input, output);
+        }
 
     }
     

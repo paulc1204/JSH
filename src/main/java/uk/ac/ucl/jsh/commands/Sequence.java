@@ -12,19 +12,19 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import uk.ac.ucl.jsh.visitors.Visitor;
 
-public class Sequence extends AbstractSequence implements Command {
+public class Sequence extends AbstractCommands implements Command {
+
+    public Sequence(){
+        super();
+    }
 
     public Sequence(ArrayList<Command> commands){
         super(commands);
     }
 
-    public String getSeparator(){
-        return ";";
-    }
-
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
+    public void accept(Visitor visitor, InputStream input, OutputStream output) throws Exception{
+        visitor.visit(this, input, output);
 
     }
     

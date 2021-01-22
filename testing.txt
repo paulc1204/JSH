@@ -1,0 +1,6 @@
+this contains arg
+interesting
+aaa
+AAA
+bbb
+BBB

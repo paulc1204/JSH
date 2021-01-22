@@ -51,7 +51,7 @@ public class Find extends SimpleFileVisitor<Path> implements Application {
             throw new RuntimeException("find: wrong arguments");
         }  
         if (!appArgs.contains("-name")){
-            throw new RuntimeException("find: wrong arguments");
+            throw new RuntimeException("find: must contain \'name\'");
         }
 
         writer = new OutputStreamWriter(output);
