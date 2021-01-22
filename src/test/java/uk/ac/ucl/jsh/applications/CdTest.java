@@ -5,7 +5,6 @@ import uk.ac.ucl.jsh.Jsh;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.nio.file.Paths;
 
 import org.junit.Before;
